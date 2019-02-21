@@ -13,29 +13,34 @@ services:
       - DATABASE_PORT=27017
       - DATABASE_NAME=expense
       - API_SERVER_PORT=3000
-      - SEED_DATABASE=true
+      - SEED_DATABASE=false
       - NODE_PATH=/expensetracker/node_modules
     volumes:
       - ./:/expensetracker
       - type: volume
-        source: nodemodules
+        source: persisted_node_dependencies_vol
         target: /expensetracker/node_modules
     ports:
       - 3000:3000
     command: npm run start-dev
-    #command: sleep 300
 
   mongodb:
     image: mongo:3.6.10-stretch
     environment:
       - MONGO_INITDB_DATABASE=expense
+    
+    volumes:
+      - type: volume
+        source: persisted_seed_data_vol
+        target: /data/db
 
   node_dependencies:
     image: busybox
     volumes:
       - type: volume
-        source: nodemodules
-        target: /nodemodules
+        source: persisted_node_dependencies_vol
+        target: /node_modules_on_busybox
 
 volumes:
-  nodemodules:
+  persisted_seed_data_vol:
+  persisted_node_dependencies_vol:
