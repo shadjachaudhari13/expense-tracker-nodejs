@@ -1,40 +1,26 @@
 version: '3.4'
 services:
   expense-tracker:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-        - mongodb
     working_dir: /expensetracker
-    image: shadjachaudhari/expense-tracker:first
+
+    image: 192.168.1.188:5000/node:10-alpine
+    
     environment:
       - DATABASE_SERVER=mongodb
       - DATABASE_PORT=27017
       - DATABASE_NAME=expense
       - API_SERVER_PORT=3000
       - SEED_DATABASE=false
-      - NODE_PATH=/expensetracker/node_modules
+    
     volumes:
-      - ./:/expensetracker
-      - type: volume
-        source: persisted_node_dependencies_vol
-        target: /expensetracker/node_modules
+      - type: bind
+        source: .
+        target: /expensetracker
+    
     ports:
       - 3000:3000
-    command: npm run start-dev
 
   mongodb:
     image: mongo:3.6.10-stretch
     environment:
       - MONGO_INITDB_DATABASE=expense
-
-  node_dependencies:
-    image: busybox
-    volumes:
-      - type: volume
-        source: persisted_node_dependencies_vol
-        target: /node_modules_on_busybox
-
-volumes:
-  persisted_node_dependencies_vol:
