@@ -3,24 +3,37 @@ services:
   expense-tracker:
     working_dir: /expensetracker
 
-    image: 192.168.1.188:5000/node:10-alpine
-    
+    build:
+      context: .
+      dockerfile: Dockerfile    
     environment:
       - DATABASE_SERVER=mongodb
       - DATABASE_PORT=27017
+# read dockerfile of image mongo:3.6.10-stretch on github
+# EXPORT is only a documentation between who writes dockerfile and who uses it.
+# it does not open port on container which localhost can reach
+# --port 3000:3000 is required to actually expose the port
       - DATABASE_NAME=expense
       - API_SERVER_PORT=3000
       - SEED_DATABASE=false
+      - NODE_PATH=/node/node_modules
     
     volumes:
       - type: bind
         source: .
         target: /expensetracker
+
+      - type: volume
+        source: node_modules
+        target: /expensetracker/node_modules
     
     ports:
       - 3000:3000
+    command: npm run start-dev
 
   mongodb:
-    image: mongo:3.6.10-stretch
+    image: 192.168.1.188:5000/mongo:3.6.10-stretch
     environment:
       - MONGO_INITDB_DATABASE=expense
+volumes:
+  node_modules:
