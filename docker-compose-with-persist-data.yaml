@@ -25,7 +25,7 @@ services:
     command: npm run start-dev
 
   mongodb:
-    image: 192.168.1.97:5000/mongo:3.6.10-stretch
+    image: mongo:3.6.10-stretch
     environment:
       - MONGO_INITDB_DATABASE=expense
     
