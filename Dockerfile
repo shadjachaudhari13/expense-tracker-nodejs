@@ -1,4 +1,4 @@
-FROM 192.168.1.188:5000/node:10-alpine
+FROM 192.168.1.97:5000/node:10-alpine
 
 WORKDIR /expensetracker
 
